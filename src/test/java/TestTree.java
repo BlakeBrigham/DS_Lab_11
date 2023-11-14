@@ -64,12 +64,75 @@ public class TestTree
 	
 	public void run()
 	{
+		//yes Duck
+		check(Strings.IS_IT_ALIVE);
+        say("Y");
+		check(Strings.IS_IT_A + Strings.DUCK + "?");
+		say("Y");
+		check(Strings.I_WIN);
+		check(Strings.PLAY_AGAIN);
+		say("Y");
+		// No duck, make tree
 		
 		check(Strings.IS_IT_ALIVE);
         say("Y");
-        //now what? Think of all the input and outputs here...
+		check(Strings.IS_IT_A + Strings.DUCK + "?");
+		say("N");
+		check(Strings.WHAT_IS_THE_ANSWER);
+		say("Tree");
+		check(Strings.NEW_QUESTION + "Duck and a Tree");
+		say("Is it a plant?");
+		check("Answering yes to Is it a plant? means Tree?");
+		say("Y");
+		check(Strings.THANKS);
+		check(Strings.PLAY_AGAIN);
+		say("Y");
 		
-
+		//No duck, yes tree
+		check(Strings.IS_IT_ALIVE);
+        say("Y");
+		check("Is it a plant?");
+		say("Y");
+		check(Strings.IS_IT_A + "Tree?");
+		say("Y");
+		check(Strings.I_WIN);
+		check(Strings.PLAY_AGAIN);
+		say("Y");
+		
+		//Yes rock
+		check(Strings.IS_IT_ALIVE);
+        say("N");
+		check(Strings.IS_IT_A + Strings.ROCK + "?");
+		say("Y");
+		check(Strings.I_WIN);
+		check(Strings.PLAY_AGAIN);
+		say("Y");
+		
+		//No rock, make computer
+		check(Strings.IS_IT_ALIVE);
+        say("N");
+        check(Strings.IS_IT_A + Strings.ROCK + "?");
+		say("N");
+		check(Strings.WHAT_IS_THE_ANSWER);
+		say("Computer");
+		check(Strings.NEW_QUESTION + "Rock and a Computer");
+		say("Does it not use electricity?");
+		check("Answering yes to Does it not use electricity? means Computer?");
+		say("N");
+		check(Strings.THANKS);
+		check(Strings.PLAY_AGAIN);
+		say("Y");
+		
+		//No rock, yes computer
+		check(Strings.IS_IT_ALIVE);
+        say("N");
+        check("Does it not use electricity?");
+		say("N");
+		check(Strings.IS_IT_A + "Computer?");
+		say("Y");
+		check(Strings.I_WIN);
+		check(Strings.PLAY_AGAIN);
+		say("N");
         
         
         //close the streams at the end to enrue good behavior.

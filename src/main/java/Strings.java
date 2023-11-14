@@ -11,4 +11,6 @@ public class Strings
 	public static final String I_WIN = "Ha Ha, I win!";
 	public static final String IS_IT_A = "Is it a ";
 	public static final String THANKS = "Thanks!";
+	
+	public static final String ANSWERING_YES = "Answering yes to ";
 }
