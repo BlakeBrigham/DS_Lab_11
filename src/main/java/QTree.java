@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 public class QTree
 {
+	public static final String ANSWERING_YES = "Answering yes to ";
 	
 	
 	Scanner in;
@@ -17,8 +18,8 @@ public class QTree
 		this.in=new Scanner(in);
 		
 		root = new QNode("Is it alive?", null, null, null);
-		root.yes = new QNode("Is it a Duck?", null, null, root);
-		root.no = new QNode("Is it a Rock?", null, null, root);
+		root.yes = new QNode("Duck", null, null, root);
+		root.no = new QNode("Rock", null, null, root);
 	}
 	
     
@@ -36,42 +37,59 @@ public class QTree
 		}
 	}
 	
-	public void swap(QNode a, QNode b, boolean yes) {
-		QNode curr = a;
+	public void swap(QNode a, QNode b, boolean yes, boolean parentyes) {
+		QNode curr = new QNode(a.val, a.yes, a.no, a.parent);
+		QNode parent = curr.parent;
 		
-		a.val = b.val;
-		a.yes = null;
-		a.no = null;
-		a.parent = b;
+		a.yes = b.yes; 
+		a.no = b.no;
+		a.parent = b; //is tree parent to duck
+		b.parent = parent;
 		
-		b.val = curr.val;
-		b.parent = curr.parent;
-		
-		if(yes) {
-			b.yes = a;
-			b.no = curr.no;
+		if(parentyes) 
+		{
+			b.no = a;
+			if(yes) 
+			{
+				parent.yes = b;
+			}
+			else 
+			{
+				parent.no = b;
+			}
 		}
 		
 		else
 		{
-			b.yes = curr.yes;
-			b.no = a;
+			b.yes = a;
+			if(yes) 
+			{
+				parent.yes = b;
+			}
+			else 
+			{
+				parent.no = b;
+			}
 		}
 	}
 	
-	public void insert(QNode a, String question, boolean yes) {
+	public void insert(QNode a, String question, String answer, boolean yes, boolean parentyes) {
 		if(yes) {
-			a.yes = new QNode(question, null, null, a);
-			swap(a, a.yes, true);
+			a.no = new QNode(question, null, null, a);
+			swap(a, a.no, yes, parentyes);
+			a.parent.yes = new QNode(answer, null, null, a.parent);
+			
+			
 		}
 		else {
-			a.no = new QNode(question, null, null, a);
-			swap(a, a.no, false);
+			a.yes = new QNode(question, null, null, a);
+			swap(a, a.yes, yes, parentyes);
+			a.parent.no = new QNode(answer, null, null, a.parent);
 		}
 	}
 	
 	public QNode yesno(QNode curr, String scanned) {
-		if(scanned == "Y" || scanned == "y") {
+		if(scanned.equals("Y") || scanned.equals("y")) {
 			return curr.yes;
 		}
 		else {
@@ -79,20 +97,78 @@ public class QTree
 		}
 	}
 	
+	public boolean strYes(String scanned)
+	{
+		if(scanned.equals("Y") || scanned.equals("y")) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
     //plays the game, be sure to grab input from the Scanner "in", and send your output to "out".
 	public void playGame()
 	{
-		boolean end = false;
-		out.print(root.val);
-		String scanned = in.next();
+		out.println(root.val);
+		String scanned = in.nextLine();
 		QNode curr = yesno(root, scanned);
-		playround(curr);
+		playround(curr, strYes(scanned));
 		
         return;
 	}
 	
 	
-	private void playround(QNode node) {
+	private void playround(QNode node, boolean yes) {
+		if (node.yes == null && node.no == null)
+		{
+			out.println(Strings.IS_IT_A + node.val + "?");
+		}
+		else
+		{
+			out.println(node.val);
+		}
+		
+		String answer;
+		String question;
+		String scanned = in.nextLine();
+		boolean scanyes = strYes(scanned);
+		QNode curr = yesno(node, scanned);
+		if (scanyes && curr == null) 
+		{
+			out.println(Strings.I_WIN);
+		}
+		else if (!scanyes && curr == null)
+		{
+			out.println(Strings.WHAT_IS_THE_ANSWER);
+			answer = in.nextLine();
+			out.println(Strings.NEW_QUESTION + node.val + " and a " + answer);
+			question = in.nextLine();
+			out.println(ANSWERING_YES + question + " means "+ answer + "?");
+			scanned = in.nextLine();
+			insert(node, question, answer, strYes(scanned), yes);
+			out.println(Strings.THANKS);
+		}
+		else if (scanyes)
+		{
+			playround(node.yes, scanyes);
+		}
+		else
+		{
+			playround(node.no, scanyes);
+		}
+		
+		out.println(Strings.PLAY_AGAIN);
+		scanned = in.nextLine();
+		if (strYes(scanned))
+		{
+			playGame();
+			return;
+		}
+		else
+		{
+			return;
+		}
 		
 	}
 	
